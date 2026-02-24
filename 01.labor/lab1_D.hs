@@ -130,10 +130,27 @@ fakt3 res n
 -- - az első n olyan természetes számot, amelyben nem szerepelnek a négyzetszámok,
 -- - x hatványait adott n-ig,
 -- - egy szám páros osztóinak listáját,
+osztokN n = [i | i <- [1..n], n `mod` i == 0, mod i 2 == 0]
+osztokN2 n = [i | i <- [2,4]]
 -- - n-ig a prímszámok listáját,
 -- - n-ig az összetett számok listáját,
 -- - n-ig a páratlan összetett számok listáját,
 -- - az n-nél kisebb Pitágorászi számhármasokat,
 -- - a következő listát: $$[(\texttt{a},0), (\texttt{b},1),\ldots, (\texttt{z}, 25)]$$,
 -- - a következő listát: $$[(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]$$, majd általánosítsuk a feladatot.
+szamok1 = zip [0 .. 10] [5,4 ..0]
+szamok2 n =[(i, n-1) | i <- [0..n]]
+szamok3 n = zip[0 .. n][n,n - 1 ..0]
 -- - azt a listát, ami felváltva tartalmaz True és False értékeket.
+tfLs :: int -> [Bool]
+tfLs n = take n ls
+  where
+    ls = [True, False] ++ ls
+
+main :: IO()
+main = do
+  putStrLn "paros osztok 48"
+  print (osztokN 48)
+  putStrLn "n-ig a paratlan osszetett szamok listaja"
+  putStrLn ("az n-nel kisebb pitagoraszi szamharmasok" + 
+  putStrLn "
