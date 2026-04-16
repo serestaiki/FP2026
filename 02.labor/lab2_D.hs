@@ -13,67 +13,69 @@ szjSzorzat2 x
   |x == 0 =1
   |otherwise = mod x 10 * szjSzorzat (div x 10)
 -- - egy szám számjegyeinek összegét (2 módszerrel),
-szjOsszeg 0 = 0
-szjOsszeg x = mod x 10 + szjOsszeg (div x 10)
-
-szjOsszeg2 x
-  | x<0=error "neg szam"
-  | x == 0 = 0
-  | otherwise = mod x 10 + szjOsszeg2 (div x 10)
--- - egy szám számjegyeinek számát (2 módszerrel),
-szjSzam 0=0
-szjSzam x = 1 + szjSzam (div x 10)
+-- szám adott számjegyeinek összege
+szamszjosszeg :: Int -> Int -> Int
+szamszjosszeg 0 _ = 0
+szamszjosszeg n szj
+  | mod n 10 == szj = szj + szamszjosszeg (div n 10) szj
+  | otherwise = szamszjosszeg (div n 10) szj
 
 
-szjSzam2 x
-  | x < 0 = szjSzam2 (abs x)
-  | x == 0 = 0
-  | otherwise = 1 + szjSzam2 (div x 10)
+-- páros számjegyek száma
+parosSzjDb :: Int -> Int
+parosSzjDb 0 = 0
+parosSzjDb n
+  | mod (mod n 10) 2 == 0 = 1 + parosSzjDb (div n 10)
+  | otherwise = parosSzjDb (div n 10)
 
--- - egy szám azon számjegyeinek összegét, mely paraméterként van megadva, pl. legyen a függvény neve fugv4, ekkor a következő meghívásra, a következő eredményt kell kapjuk:
 
---   ```haskell
---   > fugv4 577723707 7
---   35
---   ```
--- - egy szám páros számjegyeinek számát,
--- - egy szám legnagyobb számjegyét,
--- - egy szám $b$ számrendszerbeli alakjában a $d$-vel egyenlő számjegyek számát (például a $b = 10$-es számrendszerben a $d = 2$-es számjegyek száma),
---   Példák függvényhívásokra:
+-- legnagyobb számjegy
+maxSzj :: Int -> Int
+maxSzj n
+  | n < 10 = n
+  | otherwise =
+      let m = maxSzj (div n 10)
+          d = mod n 10
+      in if d > m then d else m
 
---   ```haskell
---   fugv 7673573 10 7 -> 3
---   fugv 1024 2 1 -> 1
---   fugv 1023 2 1 -> 10
---   fugv 345281 16 4 -> 2
---   ```
--- - az 1000-ik Fibonacci számot.
 
--- II. Alkalmazzuk a map függvényt a I.-nél megírt függvényekre.
+-- számjegyek száma b számrendszerben
+fugv :: Int -> Int -> Int -> Int
+fugv 0 _ _ = 0
+fugv n b d
+  | mod n b == d = 1 + fugv (div n b) b d
+  | otherwise = fugv (div n b) b d
 
--- **Megoldott feladatok:**
 
--- - Határozzuk meg egy szám számjegyeinek összegét:
---   I. módszer:
+-- Fibonacci
+fib :: Integer -> Integer
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-1) + fib (n-2)
 
---   ```haskell
---   szOsszeg :: Int -> Int
---   szOsszeg 0 = 0
---   szOsszeg x = ( x `mod` 10 ) + szOsszeg (x `div` 10)
 
---   > szOsszeg 123
---   ```
+fib1000 :: Integer
+fib1000 = fib 1000
 
---   II. módszer:
 
---   ```haskell
---   szOsszeg1 :: Int -> Int -> Int
---   szOsszeg1 0 t = t
---   szOsszeg1 x t = szOsszeg1 (x `div` 10) ( t + x `mod` 10 )
-
---   > szOsszeg1 123 0
---   ```
 main :: IO()
 main = do
     let fel1 = szjSzorzat 1234
     print fel1
+
+    print (szamszjosszeg 577723707 7)
+
+    print (parosSzjDb 12345678)
+
+    print (maxSzj 9834512)
+
+    print (fugv 7673573 10 7)
+    print (fugv 1024 2 1)
+    print (fugv 1023 2 1)
+    print (fugv 345281 16 4)
+
+    print fib1000
+
+    print (map (\x -> szamszjosszeg x 7) [123,456,789])
+    print (map szjSzorzat [123,456,789])
+    print (map parosSzjDb [1234,2222,1357])
